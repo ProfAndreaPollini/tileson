@@ -28,8 +28,11 @@ namespace tson
             #endif
             inline bool parse(const fs::path &path);
             inline std::size_t loadMaps(tson::Tileson *parser); //tileson_forward.hpp
-            inline bool contains(std::string_view filename);
-            inline const WorldMapData *get(std::string_view filename) const;
+            inline bool contains(tson::string_view filename);
+#if __cplusplus >= 202002L
+            inline const WorldMapData *get(tson::string_view filename) const;
+#endif
+            const WorldMapData * get(std::string_view filename) const;
 
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const fs::path &getFolder() const;
@@ -110,7 +113,7 @@ namespace tson
      * @param filename
      * @return
      */
-    bool World::contains(std::string_view filename)
+    bool World::contains(tson::string_view filename)
     {
         //Note: might be moved to std::ranges from C++20.
         return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
@@ -121,11 +124,20 @@ namespace tson
      * @param filename Filename (including extension) - (example: file.json)
      * @return pointer to WorldMapData or nullptr if not exists
      */
-    const WorldMapData * World::get(std::string_view filename) const
+#if __cplusplus >= 202002L
+    const WorldMapData * World::get(tson::string_view filename) const
     {
         auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
         return (iter == m_mapData.end()) ? nullptr : iter.operator->();
     }
+#endif
+    //TODO: implement
+    const WorldMapData * World::get(std::string_view filename) const
+    {
+//      auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return std::string(item.fileName.begin(), item.fileName.end()) == filename; });
+//      return (iter == m_mapData.end()) ? nullptr : iter.operator->();
+        return nullptr;}
+
 
     /*!
      * Get all maps that have been loaded by loadMaps().

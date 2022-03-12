@@ -78,6 +78,16 @@
 	#endif
 #endif
 
+#if __cplusplus >= 202002L
+namespace tson {
+using string = std::u8string;
+using string_view = std::u8string_view;
+}
+#else
+using string = std::string;
+using string_view = std::string_view;
+#endif
+
 namespace json11 {
 
 	enum JsonParse {
@@ -7229,7 +7239,7 @@ namespace tson
 			#endif
 			inline bool parse(const fs::path &path);
 			inline std::size_t loadMaps(tson::Tileson *parser); //tileson_forward.hpp
-			inline bool contains(std::string_view filename);
+			inline bool contains(tson::string_view filename);
 			inline const WorldMapData *get(std::string_view filename) const;
 
 			[[nodiscard]] inline const fs::path &getPath() const;
@@ -7311,10 +7321,10 @@ namespace tson
 	 * @param filename
 	 * @return
 	 */
-	bool World::contains(std::string_view filename)
+	bool World::contains(tson::string_view filename)
 	{
 		//Note: might be moved to std::ranges from C++20.
-		return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
+		return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const tson::WorldMapData &item) { return item.fileName == std::string(filename.begin(), filename.end()); });
 	}
 
 	/*!
@@ -7652,9 +7662,9 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::uniqu
 		return std::move(parseJson());
 	}
 
-	std::string msg = "File not found: ";
-	msg += std::string(path.u8string());
-	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
+	tson::string msg = u8"File not found: ";
+	msg += path.u8string();
+	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, std::string(msg.begin(), msg.end()));
 }
 
 /*!

@@ -25,7 +25,7 @@ namespace tson
     {
         public:
             inline Map() = default;
-            inline Map(ParseStatus status, std::string description);
+            inline Map(ParseStatus status, tson::string description);
             inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
             inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
 
@@ -49,7 +49,7 @@ namespace tson
             [[nodiscard]] inline std::vector<tson::Tileset> &getTilesets();
 
             [[nodiscard]] inline ParseStatus getStatus() const;
-            [[nodiscard]] inline const std::string &getStatusMessage() const;
+            [[nodiscard]] inline const tson::string &getStatusMessage() const;
             [[nodiscard]] inline const std::map<uint32_t, tson::Tile *> &getTileMap() const;
 
             inline Layer * getLayer(const std::string &name);
@@ -88,7 +88,7 @@ namespace tson
             //int                                    m_version{};       /*! 'version': The JSON format version - Removed in Tileson v1.3.0*/
 
             ParseStatus                            m_status {ParseStatus::OK};
-            std::string                            m_statusMessage {"OK"};
+            tson::string                            m_statusMessage {u8"OK"};
 
             std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
 
@@ -118,7 +118,7 @@ namespace tson
  * @param status The status
  * @param description Description of the status
  */
-tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
+tson::Map::Map(tson::ParseStatus status, tson::string description) : m_status {status}, m_statusMessage { std::move(description) }
 {
 
 }
@@ -467,7 +467,7 @@ tson::ParseStatus tson::Map::getStatus() const
     return m_status;
 }
 
-const std::string &tson::Map::getStatusMessage() const
+const tson::string &tson::Map::getStatusMessage() const
 {
     return m_statusMessage;
 }

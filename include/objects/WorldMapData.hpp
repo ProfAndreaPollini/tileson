@@ -19,7 +19,7 @@ namespace tson
 
             fs::path folder;
             fs::path path;
-            std::string fileName;
+            tson::string fileName;
             tson::Vector2i size;
             tson::Vector2i position;
     };
@@ -32,7 +32,7 @@ namespace tson
     void WorldMapData::parse(const fs::path &folder_, IJson &json)
     {
         folder = folder_;
-        if(json.count("fileName") > 0) fileName = json["fileName"].get<std::string>();
+        if(json.count("fileName") > 0) fileName = json["fileName"].get<tson::string>();
         if(json.count("height") > 0) size = {json["width"].get<int>(), json["height"].get<int>()};
         if(json.count("x") > 0) position = {json["x"].get<int>(), json["y"].get<int>()};
 

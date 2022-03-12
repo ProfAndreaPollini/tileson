@@ -35,6 +35,16 @@
     #endif
 #endif
 
+#if __cplusplus >= 202002L
+    namespace tson {
+      using string = std::u8string;
+      using string_view = std::u8string_view;
+    }
+#else
+        using string = std::string;
+        using string_view = std::string_view;
+#endif
+
 #include <fstream>
 #include <sstream>
 #include <memory>
@@ -96,7 +106,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::uniqu
         std::vector<uint8_t> decompressed = decompressor->decompressFile(path);
         result = (decompressed.empty()) ? false : true;
         if(!result)
-            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, u8"Error during decompression");
         result = m_json->parse(&decompressed[0], decompressed.size());
         if(result)
             return std::move(parseJson());
@@ -106,8 +116,8 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::uniqu
         return std::move(parseJson());
     }
 
-    std::string msg = "File not found: ";
-    msg += std::string(path.u8string());
+    tson::string msg = u8"File not found: ";
+    msg += path.u8string();
     return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 
@@ -126,14 +136,14 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size, s
         std::vector<uint8_t> decompressed = decompressor->decompress(data, size);
         result = (decompressed.empty()) ? false : true;
         if(!result)
-            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, u8"Error during decompression");
         result = m_json->parse(&decompressed[0], decompressed.size());
     }
     else
         result = m_json->parse(data, size);
 
     if(!result)
-        return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
+        return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, u8"Memory error");
 
 
     return std::move(parseJson());
@@ -151,7 +161,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parseJson()
     if(map->parse(*m_json, &m_decompressors))
         return std::move(map);
 
-    return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
+    return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, u8"Missing map data...");
 }
 
 /*!

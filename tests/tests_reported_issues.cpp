@@ -138,7 +138,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
 
             fs::path imagePath;
 
-            std::string pathStr;
+            tson::string pathStr;
             //With this, I know that it's related to the tileset above (though I only have one tileset)
             //Si l'ID de la tile est compris entre le premier et le dernier ID inclus
             if (tile->getId() >= firstId && tile->getId() <= lastId)

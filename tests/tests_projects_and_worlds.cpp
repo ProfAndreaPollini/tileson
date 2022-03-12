@@ -30,8 +30,11 @@ TEST_CASE( "Parse project - expect right number of files and folders", "[project
 
     tson::Project project {pathToUse};
     auto files = project.getFolders().at(0).getSubFolders().at(0).getFiles();
-    std::string str;
-    std::for_each(files.begin(), files.end(), [&](const auto &item) { str.append(item.u8string()); });
+    tson::string str;
+    std::for_each(files.begin(), files.end(), [&](const auto &item) {
+      auto s = str.append(item.u8string());
+
+    });
 
     REQUIRE(project.getData().folders.size() == 2);
     REQUIRE(project.getFolders().size() == 2);

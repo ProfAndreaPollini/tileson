@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.21)
 project(tileson)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(TILESON_PROJECT_VERSION_MAJOR 1)
 set(TILESON_PROJECT_VERSION_MINOR 3)
 set(TILESON_PROJECT_VERSION_PATCH 1)
@@ -55,8 +55,8 @@ else()
 endif()
 
 
-#option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
-option(BUILD_TESTS "Build unit tests." ON)
+option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
+option(BUILD_TESTS "Build unit tests." OFF)
 option(BUILD_EXAMPLES "Build examples." OFF)
 option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 
@@ -95,9 +95,9 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
 # Only activated for code completion, must be uncommented before release!
 # add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
-if(BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
+#if(BUILD_TESTS)
+#    add_subdirectory(tests)
+#endif()
 
 if(BUILD_EXAMPLES)
     set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
